@@ -1,170 +1,613 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>لوحة التحكم</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>لوحة التحكم - my-ads-app</title>
 
 <style>
+:root {
+  --gold: #ffd700;
+  --gold-dark: #d4af37;
+  --silver: #c0c0c0;
+  --bg-dark: #111827;
+  --bg-darker: #020617;
+  --card-bg: rgba(15,23,42,0.95);
+}
+
+* {
+  box-sizing: border-box;
+}
+
 body {
-  margin:0;
-  font-family:sans-serif;
-  direction:rtl;
-  background:linear-gradient(135deg,#1a1a1a,#2d2d2d);
-  color:white;
+  margin: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: radial-gradient(circle at top, #333, #000);
+  color: #e5e7eb;
 }
+
+/* الهيدر */
 .header {
-  padding:20px;
-  text-align:center;
-  background:linear-gradient(90deg,#c0c0c0,#ffd700);
-  color:black;
-  font-weight:bold;
-  font-size:24px;
+  padding: 18px 16px;
+  background: linear-gradient(90deg, var(--gold-dark), var(--silver));
+  color: #111;
+  box-shadow: 0 4px 18px rgba(0,0,0,0.6);
+  position: sticky;
+  top: 0;
+  z-index: 10;
 }
-.box {
-  margin:20px;
-  background:rgba(255,255,255,0.07);
-  padding:20px;
-  border-radius:12px;
-  border:1px solid rgba(255,255,255,0.15);
+.header h1 {
+  margin: 0;
+  font-size: 22px;
 }
-button {
-  width:100%;
-  margin-top:8px;
-  padding:12px;
-  border:none;
-  border-radius:8px;
-  font-weight:bold;
-  background:linear-gradient(90deg,#ffd700,#c0c0c0);
+.header p {
+  margin: 4px 0 0;
+  font-size: 13px;
+}
+
+/* الحاوية الرئيسية */
+.container {
+  max-width: 1100px;
+  margin: 16px auto 40px;
+  padding: 0 12px;
+}
+
+/* بوكس عام */
+.card {
+  background: var(--card-bg);
+  border-radius: 14px;
+  padding: 16px;
+  margin-bottom: 16px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.7);
+  border: 1px solid rgba(148,163,184,0.4);
+}
+
+/* شاشة دخول الأدمن */
+#admin-login {
+  max-width: 420px;
+  margin: 40px auto;
+  text-align: center;
+  background: linear-gradient(145deg, rgba(17,24,39,0.9), rgba(15,23,42,0.95));
+}
+#admin-login h2 {
+  margin-top: 0;
+  margin-bottom: 10px;
+  color: var(--gold);
+}
+input, select, button, textarea {
+  font-family: inherit;
+}
+
+/* حقول الإدخال */
+.input {
+  width: 100%;
+  padding: 10px 11px;
+  margin-top: 10px;
+  border-radius: 10px;
+  border: 1px solid #4b5563;
+  background: #020617;
+  color: #e5e7eb;
+}
+
+/* زر ذهبي */
+.btn {
+  margin-top: 12px;
+  width: 100%;
+  padding: 11px;
+  border-radius: 999px;
+  border: none;
+  font-weight: 700;
+  font-size: 15px;
+  cursor: pointer;
+  background: linear-gradient(90deg, var(--gold), var(--gold-dark));
+  color: #111827;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.5);
+}
+.btn:active {
+  transform: translateY(1px);
+  box-shadow: 0 3px 8px rgba(0,0,0,0.4);
+}
+
+/* بطاقة المعلومات */
+.section-title {
+  font-size: 16px;
+  margin: 0 0 8px;
+  color: var(--gold);
+}
+
+/* شبكة الإحصائيات */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 10px;
+}
+.stat-card {
+  background: rgba(15,23,42,0.95);
+  border-radius: 12px;
+  padding: 12px;
+  border: 1px solid rgba(148,163,184,0.5);
+}
+.stat-label {
+  font-size: 12px;
+  color: #9ca3af;
+}
+.stat-value {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--gold);
+}
+
+/* الجداول */
+.table-wrapper {
+  overflow-x: auto;
 }
 table {
-  width:100%;
-  margin-top:10px;
-  border-collapse:collapse;
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
 }
-table th {
-  background:#ffd700;
-  color:black;
-  padding:8px;
+th, td {
+  padding: 8px 6px;
+  border-bottom: 1px solid rgba(55,65,81,0.9);
 }
-table td {
-  padding:8px;
-  border:1px solid rgba(255,255,255,0.1);
+th {
+  text-align: right;
+  background: rgba(31,41,55,0.9);
+  color: #e5e7eb;
+  position: sticky;
+  top: 0;
+  z-index: 1;
 }
-.small-btn {
-  padding:6px 10px;
-  border-radius:6px;
-  border:none;
-  cursor:pointer;
-  font-size:12px;
+tr:nth-child(even) td {
+  background: rgba(15,23,42,0.6);
 }
-.accept { background:#00ff8c; }
-.reject { background:#ff4040; color:white; }
-.delete { background:#ff8800; }
+
+/* أزرار صغيرة */
+.badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+}
+.badge-pending { background: #f59e0b; color: #111; }
+.badge-accepted { background: #22c55e; color: #052e16; }
+.badge-rejected { background: #ef4444; color: #fee2e2; }
+
+.btn-xs {
+  padding: 4px 7px;
+  border-radius: 999px;
+  border: none;
+  font-size: 11px;
+  cursor: pointer;
+  margin: 1px;
+}
+.btn-green { background:#22c55e; color:#052e16; }
+.btn-red { background:#ef4444; color:#fee2e2; }
+.btn-orange { background:#f97316; color:#111827; }
+
+/* تقسيم الأعمدة */
+.grid-2 {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+  gap: 12px;
+}
+@media(max-width: 800px) {
+  .grid-2 {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
 </style>
 </head>
 
 <body>
 
-<div class="header">لوحة التحكم الإدارية</div>
-
-<div class="box">
-  <h3>إضافة إعلان</h3>
-  <input id="adLink" style="width:95%; padding:8px; border-radius:8px;" placeholder="رابط فيديو يوتيوب">
-  <button onclick="addAd()">إضافة الإعلان</button>
+<!-- الهيدر -->
+<div class="header">
+  <h1>لوحة التحكم — my-ads-app 👑</h1>
+  <p>إدارة المستخدمين، الإعلانات، وطلبات السحب (ستايل ذهبي + فضي)</p>
 </div>
 
-<div class="box">
-  <h3>الإعلانات الحالية</h3>
-  <div id="adsList"></div>
-</div>
+<div class="container">
 
-<div class="box">
-  <h3>المستخدمون</h3>
-  <div id="usersList"></div>
-</div>
+  <!-- شاشة تسجيل دخول الأدمن -->
+  <div id="admin-login" class="card">
+    <h2>دخول المدير</h2>
+    <p style="font-size:13px;color:#d1d5db;">
+      أدخل كلمة سر الأدمن للدخول للوحة التحكم.
+    </p>
+    <input id="admin-pass" class="input" type="password" placeholder="كلمة سر الأدمن">
+    <button class="btn" onclick="checkAdmin()">دخول</button>
+  </div>
 
-<div class="box">
-  <h3>طلبات السحب</h3>
-  <div id="withdrawList"></div>
-</div>
+  <!-- لوحة التحكم الكاملة -->
+  <div id="admin-panel" style="display:none;">
 
+    <!-- إحصائيات عامة -->
+    <div class="card">
+      <h3 class="section-title">الإحصائيات العامة</h3>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-label">إجمالي المستخدمين</div>
+          <div id="stat-users" class="stat-value">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">إجمالي الإعلانات</div>
+          <div id="stat-ads" class="stat-value">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">إجمالي طلبات السحب</div>
+          <div id="stat-withdraw" class="stat-value">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">مجموع المبالغ المقبولة</div>
+          <div id="stat-paid" class="stat-value">$0</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- قسم إعلانات + سحوبات -->
+    <div class="grid-2">
+
+      <!-- إدارة الإعلانات -->
+      <div class="card">
+        <h3 class="section-title">إدارة الإعلانات 🎥</h3>
+        <input id="ad-link" class="input" type="text" placeholder="أدخل رابط فيديو يوتيوب (shorts أو watch)">
+        <button class="btn" onclick="addAd()">إضافة إعلان جديد</button>
+        <div style="margin-top:10px;" class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>رابط الفيديو</th>
+                <th>حذف</th>
+              </tr>
+            </thead>
+            <tbody id="ads-body">
+              <tr><td colspan="3">جاري التحميل...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- إدارة السحوبات -->
+      <div class="card">
+        <h3 class="section-title">طلبات السحب 💸</h3>
+        <div class="table-wrapper" style="max-height:320px;">
+          <table>
+            <thead>
+              <tr>
+                <th>المستخدم</th>
+                <th>المبلغ</th>
+                <th>الحالة</th>
+                <th>إجراءات</th>
+              </tr>
+            </thead>
+            <tbody id="withdraw-body">
+              <tr><td colspan="4">لا يوجد بيانات بعد</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- إدارة المستخدمين -->
+    <div class="card">
+      <h3 class="section-title">المستخدمون 👥</h3>
+      <p style="font-size:12px;color:#9ca3af;margin-top:0;">
+        يمكنك تعديل رصيد المستخدمين، أو حذف مستخدم نهائياً.
+      </p>
+      <div class="table-wrapper" style="max-height:360px;">
+        <table>
+          <thead>
+            <tr>
+              <th>الإيميل</th>
+              <th>الرصيد ($)</th>
+              <th>المحفظة</th>
+              <th>تعديل الرصيد</th>
+              <th>حذف</th>
+            </tr>
+          </thead>
+          <tbody id="users-body">
+            <tr><td colspan="5">جاري التحميل...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div><!-- /admin-panel -->
+
+</div><!-- /container -->
+
+<!-- Supabase -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 <script src="supabase.js"></script>
 
 <script>
-async function addAd(){
-  const link = document.getElementById("adLink").value;
-  if(!link) return alert("أدخل رابط!");
-  await supabase.from("ads").insert([{ youtube_url: link, reward: 3 }]);
-  alert("تمت إضافة الإعلان!");
+// 🛡 كلمة سر الأدمن (غيرها براحتك)
+const ADMIN_PASSWORD = "admin12345";
+
+// تفعيل لوحة الأدمن
+function checkAdmin() {
+  const pass = document.getElementById("admin-pass").value.trim();
+  if (pass === ADMIN_PASSWORD) {
+    document.getElementById("admin-login").style.display = "none";
+    document.getElementById("admin-panel").style.display = "block";
+    loadAll();
+  } else {
+    alert("كلمة السر غير صحيحة.");
+  }
+}
+
+// تحميل كل البيانات
+function loadAll() {
+  loadStats();
   loadAds();
+  loadUsers();
+  loadWithdraws();
 }
 
-async function loadAds(){
-  const { data } = await supabase.from("ads").select("*");
-  let html = `<table><tr><th>ID</th><th>الرابط</th><th>حذف</th></tr>`;
-  data.forEach(ad=>{
-    html += `<tr>
+// تحميل الإحصائيات
+async function loadStats() {
+  // عدد المستخدمين
+  const { count: usersCount } = await supabase
+    .from("users")
+    .select("*", { count: "exact", head: true });
+
+  // عدد الإعلانات
+  const { count: adsCount } = await supabase
+    .from("ads")
+    .select("*", { count: "exact", head: true });
+
+  // السحوبات
+  const { data: withdraws } = await supabase
+    .from("withdraw")
+    .select("*");
+
+  const totalWithdraw = withdraws ? withdraws.length : 0;
+  let totalPaid = 0;
+  if (withdraws) {
+    withdraws.forEach(w => {
+      if (w.status === "accepted") {
+        totalPaid += Number(w.amount || 0);
+      }
+    });
+  }
+
+  document.getElementById("stat-users").innerText = usersCount || 0;
+  document.getElementById("stat-ads").innerText = adsCount || 0;
+  document.getElementById("stat-withdraw").innerText = totalWithdraw;
+  document.getElementById("stat-paid").innerText = "$" + totalPaid;
+}
+
+// تحميل الإعلانات
+async function loadAds() {
+  const tbody = document.getElementById("ads-body");
+  tbody.innerHTML = "<tr><td colspan='3'>جاري التحميل...</td></tr>";
+
+  const { data, error } = await supabase.from("ads").select("*").order("id", { ascending: false });
+  if (error) {
+    tbody.innerHTML = "<tr><td colspan='3'>خطأ في تحميل الإعلانات</td></tr>";
+    console.error(error);
+    return;
+  }
+
+  if (!data || data.length === 0) {
+    tbody.innerHTML = "<tr><td colspan='3'>لا يوجد إعلانات مضافة</td></tr>";
+    return;
+  }
+
+  tbody.innerHTML = "";
+  data.forEach(ad => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
       <td>${ad.id}</td>
-      <td>${ad.youtube_url}</td>
-      <td><button class="small-btn delete" onclick="deleteAd(${ad.id})">حذف</button></td>
-    </tr>`;
+      <td style="max-width:260px;word-break:break-all;">${ad.youtube_url}</td>
+      <td><button class="btn-xs btn-red" onclick="deleteAd(${ad.id})">حذف</button></td>
+    `;
+    tbody.appendChild(tr);
   });
-  html += "</table>";
-  document.getElementById("adsList").innerHTML = html;
 }
 
-async function deleteAd(id){
+// إضافة إعلان جديد
+async function addAd() {
+  const input = document.getElementById("ad-link");
+  const link = input.value.trim();
+  if (!link) {
+    alert("أدخل رابط يوتيوب أولاً.");
+    return;
+  }
+
+  const { error } = await supabase.from("ads").insert([{ youtube_url: link, reward: 3 }]);
+  if (error) {
+    alert("حدث خطأ أثناء إضافة الإعلان.");
+    console.error(error);
+    return;
+  }
+
+  alert("تمت إضافة الإعلان بنجاح.");
+  input.value = "";
+  loadAds();
+  loadStats();
+}
+
+// حذف إعلان
+async function deleteAd(id) {
+  if (!confirm("هل أنت متأكد من حذف هذا الإعلان؟")) return;
   await supabase.from("ads").delete().eq("id", id);
   loadAds();
+  loadStats();
 }
 
-async function loadUsers(){
-  const { data } = await supabase.from("users").select("*");
-  let html = `<table><tr><th>ID</th><th>الرصيد</th><th>محفظة</th></tr>`;
-  data.forEach(u=>{
-    html += `<tr>
-      <td>${u.id}</td>
-      <td>${u.points}$</td>
-      <td>${u.wallet_address || "—"}</td>
-    </tr>`;
+// تحميل المستخدمين
+async function loadUsers() {
+  const tbody = document.getElementById("users-body");
+  tbody.innerHTML = "<tr><td colspan='5'>جاري التحميل...</td></tr>";
+
+  const { data, error } = await supabase
+    .from("users")
+    .select("*")
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    tbody.innerHTML = "<tr><td colspan='5'>خطأ في تحميل المستخدمين</td></tr>";
+    console.error(error);
+    return;
+  }
+
+  if (!data || data.length === 0) {
+    tbody.innerHTML = "<tr><td colspan='5'>لا يوجد مستخدمين بعد</td></tr>";
+    return;
+  }
+
+  tbody.innerHTML = "";
+  data.forEach(user => {
+    const tr = document.createElement("tr");
+    const email = user.email || user.auth_user_id || "غير معروف";
+    const points = user.points || 0;
+    const wallet = user.wallet_address || "—";
+
+    tr.innerHTML = `
+      <td style="max-width:200px;word-break:break-all;">${email}</td>
+      <td>${points}</td>
+      <td style="max-width:220px;word-break:break-all;">${wallet}</td>
+      <td>
+        <button class="btn-xs btn-green" onclick="changePoints('${user.id}', 10)">+10</button>
+        <button class="btn-xs btn-green" onclick="changePoints('${user.id}', 50)">+50</button>
+        <button class="btn-xs btn-green" onclick="changePoints('${user.id}', 100)">+100</button>
+        <button class="btn-xs btn-red" onclick="changePoints('${user.id}', -10)">-10</button>
+      </td>
+      <td>
+        <button class="btn-xs btn-orange" onclick="deleteUser('${user.id}')">حذف</button>
+      </td>
+    `;
+    tbody.appendChild(tr);
   });
-  html += "</table>";
-  document.getElementById("usersList").innerHTML = html;
 }
 
-async function loadWithdraws(){
-  const { data } = await supabase.from("withdraw").select("*");
-  let html = `<table>
-    <tr><th>ID</th><th>المستخدم</th><th>المبلغ</th><th>الحالة</th><th>قبول</th><th>رفض</th></tr>`;
-  data.forEach(w=>{
-    html += `<tr>
-      <td>${w.id}</td>
+// تعديل رصيد المستخدم (زيادة أو نقصان)
+async function changePoints(userId, diff) {
+  // نجيب الرصيد الحالي
+  const { data, error } = await supabase
+    .from("users")
+    .select("points")
+    .eq("id", userId)
+    .single();
+
+  if (error) {
+    alert("خطأ في جلب رصيد المستخدم");
+    console.error(error);
+    return;
+  }
+
+  const current = data?.points || 0;
+  let next = current + diff;
+  if (next < 0) next = 0;
+
+  const { error: upErr } = await supabase
+    .from("users")
+    .update({ points: next })
+    .eq("id", userId);
+
+  if (upErr) {
+    alert("خطأ في تعديل الرصيد");
+    console.error(upErr);
+    return;
+  }
+
+  loadUsers();
+  loadStats();
+}
+
+// حذف مستخدم
+async function deleteUser(userId) {
+  if (!confirm("هل أنت متأكد من حذف هذا المستخدم وكل بياناته؟")) return;
+  await supabase.from("users").delete().eq("id", userId);
+  loadUsers();
+  loadStats();
+}
+
+// تحميل السحوبات
+async function loadWithdraws() {
+  const tbody = document.getElementById("withdraw-body");
+  tbody.innerHTML = "<tr><td colspan='4'>جاري التحميل...</td></tr>";
+
+  const { data, error } = await supabase
+    .from("withdraw")
+    .select("*")
+    .order("id", { ascending: false });
+
+  if (error) {
+    tbody.innerHTML = "<tr><td colspan='4'>خطأ في تحميل السحوبات</td></tr>";
+    console.error(error);
+    return;
+  }
+
+  if (!data || data.length === 0) {
+    tbody.innerHTML = "<tr><td colspan='4'>لا يوجد طلبات سحب</td></tr>";
+    return;
+  }
+
+  tbody.innerHTML = "";
+  data.forEach(w => {
+    const tr = document.createElement("tr");
+    const badgeClass =
+      w.status === "accepted" ? "badge-accepted" :
+      w.status === "rejected" ? "badge-rejected" :
+      "badge-pending";
+
+    tr.innerHTML = `
       <td>${w.user_id}</td>
       <td>${w.amount}$</td>
-      <td>${w.status}</td>
-      <td><button class="small-btn accept" onclick="acceptW(${w.id})">✔</button></td>
-      <td><button class="small-btn reject" onclick="rejectW(${w.id})">✖</button></td>
-    </tr>`;
+      <td><span class="badge ${badgeClass}">${w.status}</span></td>
+      <td>
+        <button class="btn-xs btn-green" onclick="setWithdrawStatus(${w.id}, 'accepted', ${w.amount})">قبول</button>
+        <button class="btn-xs btn-red" onclick="setWithdrawStatus(${w.id}, 'rejected', ${w.amount})">رفض</button>
+      </td>
+    `;
+    tbody.appendChild(tr);
   });
-  html += "</table>";
-  document.getElementById("withdrawList").innerHTML = html;
 }
 
-async function acceptW(id){
-  await supabase.from("withdraw").update({ status:"accepted" }).eq("id", id);
+// قبول / رفض السحب
+async function setWithdrawStatus(withdrawId, status, amount) {
+  // نحدث حالة السحب
+  await supabase
+    .from("withdraw")
+    .update({ status })
+    .eq("id", withdrawId);
+
+  // لو قبلنا السحب، ننقص رصيد المستخدم
+  if (status === "accepted") {
+    const { data: w } = await supabase
+      .from("withdraw")
+      .select("user_id")
+      .eq("id", withdrawId)
+      .single();
+
+    if (w && w.user_id) {
+      const { data: user } = await supabase
+        .from("users")
+        .select("points")
+        .eq("id", w.user_id)
+        .single();
+
+      if (user) {
+        let newPoints = (user.points || 0) - Number(amount || 0);
+        if (newPoints < 0) newPoints = 0;
+
+        await supabase
+          .from("users")
+          .update({ points: newPoints })
+          .eq("id", w.user_id);
+      }
+    }
+  }
+
   loadWithdraws();
+  loadUsers();
+  loadStats();
 }
-
-async function rejectW(id){
-  await supabase.from("withdraw").update({ status:"rejected" }).eq("id", id);
-  loadWithdraws();
-}
-
-loadAds();
-loadUsers();
-loadWithdraws();
 </script>
 
 </body>
