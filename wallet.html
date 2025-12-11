@@ -3,24 +3,44 @@
 <head>
 <meta charset="UTF-8">
 <title>محفظتي</title>
-
 <style>
-body { background:#111; color:white; text-align:center; font-family:sans-serif; }
-.box { background:#222; padding:20px; border-radius:10px; margin:20px; }
+body { background:#111; color:white; font-family:sans-serif; text-align:center; }
+.box { background:#222; margin:10px; padding:15px; border-radius:10px; font-size:22px; }
+.menu a { color:white; text-decoration:none; display:block; margin:10px; font-size:20px; }
+.btn {
+  background:#444; color:white; padding:15px; margin:10px;
+  border-radius:10px; font-size:22px; cursor:pointer;
+}
 </style>
 </head>
 
 <body>
 
-<h2>محفظتي</h2>
+<h2>💼 محفظتي</h2>
 
 <div class="box">
-<p>رصيدك: <span id="balance">0</span>$</p>
+  <p>رصيدك الحالي: <span id="balance">0</span> دولار</p>
 </div>
 
-<script src="supabase.js"></script>
+<h3>اختر مبلغ الشحن</h3>
+
+<button class="btn" onclick="goDeposit(10)">شحن 10 دولار</button>
+<button class="btn" onclick="goDeposit(50)">شحن 50 دولار</button>
+<button class="btn" onclick="goDeposit(100)">شحن 100 دولار</button>
+<button class="btn" onclick="goDeposit(200)">شحن 200 دولار</button>
+<button class="btn" onclick="goDeposit(500)">شحن 500 دولار</button>
+
+<div class="menu">
+<a href="ads.html">📺 الإعلانات</a>
+<a href="profile.html">👤 الملف الشخصي</a>
+<a href="index.html">🏠 الرئيسية</a>
+</div>
+
 <script>
-// لاحقاً نربطها مع جدول السحب والشحن
+// تحويل إلى صفحة الإيداع وتمرير المبلغ
+function goDeposit(amount) {
+  window.location.href = "deposit.html?amount=" + amount;
+}
 </script>
 
 </body>
