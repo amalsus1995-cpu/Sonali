@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>الإعلانات</title>
+
+<style>
+body {
+  margin:0;
+  font-family:sans-serif;
+  direction:rtl;
+  text-align:center;
+  background:radial-gradient(circle at top, #1e3a8a, #020617);
+  color:#e5e7eb;
+}
+.header {
+  padding:20px;
+  background:linear-gradient(90deg,#1d4ed8,#0ea5e9);
+  box-shadow:0 3px 10px rgba(0,0,0,.5);
+}
+.box {
+  margin:20px;
+  background:#020617;
+  border-radius:16px;
+  padding:20px;
+  box-shadow:0 6px 20px rgba(15,23,42,.9);
+  border:1px solid rgba(148,163,184,.5);
+}
+iframe {
+  width:100%;
+  max-width:500px;
+  height:250px;
+  border-radius:12px;
+}
+#earn-btn {
+  margin-top:15px;
+  width:100%;
+  max-width:300px;
+  padding:12px;
+  background:linear-gradient(90deg,#facc15,#eab308);
+  border:none;
+  border-radius:999px;
+  font-size:16px;
+  font-weight:bold;
+  color:#111827;
+}
+#earn-btn:disabled {
+  background:#4b5563;
+  color:#9ca3af;
+}
+.menu {
+  position:fixed;
+  bottom:0;
+  width:100%;
+  background:linear-gradient(90deg,#020617,#111827);
+  padding:10px 0;
+  display:flex;
+  justify-content:space-around;
+}
+.menu a {
+  text-decoration:none;
+  color:#e5e7eb;
+  font-size:13px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+  <h2>مشاهدة الإعلانات</h2>
+  <p>شاهد الإعلان لتحصل على 3 دولار</p>
+</div>
+
+<div class="box">
+  <iframe id="ad-frame" src=""></iframe>
+  <button id="earn-btn" disabled>انتظر انتهاء الإعلان...</button>
+</div>
+
+<div class="menu">
+  <a href="profile.html">👤 الملف</a>
+  <a href="ads.html">🎥 الإعلانات</a>
+  <a href="wallet.html">💼 محفظتي</a>
+  <a href="about.html">ℹ️ من نحن</a>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+<script src="supabase.js"></script>
+
+<script>
+let currentAd = null;
+
+async function loadAd(){
+  const { data } = await supabase.from("ads").select("*").limit(1);
+
+  if(!data || data.length === 0){
+    alert("لا يوجد إعلان مضاف!");
+    return;
+  }
+
+  currentAd = data[0];
+
+  const link = currentAd.youtube_url
+    .replace("watch?v=", "embed/")
+    .replace("shorts/", "embed/");
+
+  document.getElementById("ad-frame").src = link;
+
+  setTimeout(()=>{
+    document.getElementById("earn-btn").disabled = false;
+    document.getElementById("earn-btn").innerText = "احصل على 3 دولار";
+  }, 8000);
+}
+
+loadAd();
+
+document.getElementById("earn-btn").onclick = async () => {
+  const userId = localStorage.getItem("user_id");
+  if(!userId) return;
+
+  await supabase.from("views").insert([{ user_id:userId, ad_id:currentAd.id }]);
+
+  const { data:user } = await supabase.from("users")
+      .select("points")
+      .eq("id", userId)
+      .single();
+
+  const newBalance = (user?.points || 0) + 3;
+
+  await supabase.from("users").update({ points:newBalance }).eq("id", userId);
+
+  alert("تم إضافة 3 دولار لرصيدك!");
+  document.getElementById("earn-btn").disabled = true;
+};
+</script>
+
+</body>
+</html>
