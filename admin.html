@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>لوحة التحكم</title>
+
+<style>
+body {
+  margin:0;
+  font-family:sans-serif;
+  direction:rtl;
+  background:linear-gradient(135deg,#1a1a1a,#2d2d2d);
+  color:white;
+}
+.header {
+  padding:20px;
+  text-align:center;
+  background:linear-gradient(90deg,#c0c0c0,#ffd700);
+  color:black;
+  font-weight:bold;
+  font-size:24px;
+}
+.box {
+  margin:20px;
+  background:rgba(255,255,255,0.07);
+  padding:20px;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,0.15);
+}
+button {
+  width:100%;
+  margin-top:8px;
+  padding:12px;
+  border:none;
+  border-radius:8px;
+  font-weight:bold;
+  background:linear-gradient(90deg,#ffd700,#c0c0c0);
+}
+table {
+  width:100%;
+  margin-top:10px;
+  border-collapse:collapse;
+}
+table th {
+  background:#ffd700;
+  color:black;
+  padding:8px;
+}
+table td {
+  padding:8px;
+  border:1px solid rgba(255,255,255,0.1);
+}
+.small-btn {
+  padding:6px 10px;
+  border-radius:6px;
+  border:none;
+  cursor:pointer;
+  font-size:12px;
+}
+.accept { background:#00ff8c; }
+.reject { background:#ff4040; color:white; }
+.delete { background:#ff8800; }
+</style>
+</head>
+
+<body>
+
+<div class="header">لوحة التحكم الإدارية</div>
+
+<div class="box">
+  <h3>إضافة إعلان</h3>
+  <input id="adLink" style="width:95%; padding:8px; border-radius:8px;" placeholder="رابط فيديو يوتيوب">
+  <button onclick="addAd()">إضافة الإعلان</button>
+</div>
+
+<div class="box">
+  <h3>الإعلانات الحالية</h3>
+  <div id="adsList"></div>
+</div>
+
+<div class="box">
+  <h3>المستخدمون</h3>
+  <div id="usersList"></div>
+</div>
+
+<div class="box">
+  <h3>طلبات السحب</h3>
+  <div id="withdrawList"></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+<script src="supabase.js"></script>
+
+<script>
+async function addAd(){
+  const link = document.getElementById("adLink").value;
+  if(!link) return alert("أدخل رابط!");
+  await supabase.from("ads").insert([{ youtube_url: link, reward: 3 }]);
+  alert("تمت إضافة الإعلان!");
+  loadAds();
+}
+
+async function loadAds(){
+  const { data } = await supabase.from("ads").select("*");
+  let html = `<table><tr><th>ID</th><th>الرابط</th><th>حذف</th></tr>`;
+  data.forEach(ad=>{
+    html += `<tr>
+      <td>${ad.id}</td>
+      <td>${ad.youtube_url}</td>
+      <td><button class="small-btn delete" onclick="deleteAd(${ad.id})">حذف</button></td>
+    </tr>`;
+  });
+  html += "</table>";
+  document.getElementById("adsList").innerHTML = html;
+}
+
+async function deleteAd(id){
+  await supabase.from("ads").delete().eq("id", id);
+  loadAds();
+}
+
+async function loadUsers(){
+  const { data } = await supabase.from("users").select("*");
+  let html = `<table><tr><th>ID</th><th>الرصيد</th><th>محفظة</th></tr>`;
+  data.forEach(u=>{
+    html += `<tr>
+      <td>${u.id}</td>
+      <td>${u.points}$</td>
+      <td>${u.wallet_address || "—"}</td>
+    </tr>`;
+  });
+  html += "</table>";
+  document.getElementById("usersList").innerHTML = html;
+}
+
+async function loadWithdraws(){
+  const { data } = await supabase.from("withdraw").select("*");
+  let html = `<table>
+    <tr><th>ID</th><th>المستخدم</th><th>المبلغ</th><th>الحالة</th><th>قبول</th><th>رفض</th></tr>`;
+  data.forEach(w=>{
+    html += `<tr>
+      <td>${w.id}</td>
+      <td>${w.user_id}</td>
+      <td>${w.amount}$</td>
+      <td>${w.status}</td>
+      <td><button class="small-btn accept" onclick="acceptW(${w.id})">✔</button></td>
+      <td><button class="small-btn reject" onclick="rejectW(${w.id})">✖</button></td>
+    </tr>`;
+  });
+  html += "</table>";
+  document.getElementById("withdrawList").innerHTML = html;
+}
+
+async function acceptW(id){
+  await supabase.from("withdraw").update({ status:"accepted" }).eq("id", id);
+  loadWithdraws();
+}
+
+async function rejectW(id){
+  await supabase.from("withdraw").update({ status:"rejected" }).eq("id", id);
+  loadWithdraws();
+}
+
+loadAds();
+loadUsers();
+loadWithdraws();
+</script>
+
+</body>
+</html>
