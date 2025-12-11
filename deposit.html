@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>إيداع الرصيد</title>
+<style>
+body { background:#111; color:white; font-family:sans-serif; text-align:center; }
+.box { background:#222; margin:20px; padding:20px; border-radius:10px; font-size:22px; }
+input { width:90%; font-size:22px; padding:10px; margin-top:10px; border-radius:10px; }
+</style>
+</head>
+
+<body>
+
+<h2>💰 صفحة الإيداع</h2>
+
+<div class="box">
+  <p>مبلغ الشحن المطلوب:</p>
+  <p id="amount" style="color:#0f0; font-size:30px;"></p>
+
+  <p>أرسل المبلغ إلى عنوان محفظتنا:</p>
+
+  <input id="wallet" value="TPNoGerv1EMBSdrs9Yca93eCQUVsoNiRvq" readonly>
+  <button onclick="copy()" style="margin-top:15px; padding:10px; font-size:20px;">📋 نسخ العنوان</button>
+</div>
+
+<script>
+const url = new URLSearchParams(window.location.search);
+document.getElementById("amount").innerText = url.get("amount") + " دولار";
+
+function copy() {
+  let input = document.getElementById("wallet");
+  input.select();
+  document.execCommand("copy");
+  alert("تم نسخ العنوان!");
+}
+</script>
+
+</body>
+</html>
