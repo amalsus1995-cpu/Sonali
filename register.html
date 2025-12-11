@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>إنشاء حساب</title>
+
+<style>
+body {
+  margin:0;
+  font-family:sans-serif;
+  direction:rtl;
+  text-align:center;
+  background:linear-gradient(135deg,#020617,#0b1120);
+  color:#e5e7eb;
+}
+.header {
+  padding:25px;
+  background:linear-gradient(90deg,#1d4ed8,#0ea5e9);
+  box-shadow:0 3px 10px rgba(0,0,0,.5);
+}
+.header h2 {
+  margin:0;
+  font-size:22px;
+}
+.box {
+  margin:30px 20px;
+  background:#020617;
+  border-radius:16px;
+  padding:20px;
+  box-shadow:0 6px 20px rgba(15,23,42,.9);
+  border:1px solid rgba(148,163,184,.5);
+}
+input {
+  padding:10px;
+  width:90%;
+  border-radius:10px;
+  border:1px solid #4b5563;
+  background:#020617;
+  color:#e5e7eb;
+  margin-top:10px;
+}
+button {
+  margin-top:15px;
+  background:linear-gradient(90deg,#facc15,#eab308);
+  color:#111827;
+  padding:12px;
+  font-size:16px;
+  border-radius:999px;
+  border:none;
+  width:90%;
+  font-weight:bold;
+}
+a {
+  color:#93c5fd;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+  <h2>إنشاء حساب جديد</h2>
+</div>
+
+<div class="box">
+  <input id="email" type="email" placeholder="الإيميل">
+  <input id="password" type="password" placeholder="كلمة المرور">
+
+  <button onclick="registerUser()">إنشاء الحساب</button>
+
+  <p>لديك حساب؟ <a href="login.html">تسجيل الدخول</a></p>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+<script src="supabase.js"></script>
+
+<script>
+async function registerUser(){
+  const email = document.getElementById("email").value;
+  const pass  = document.getElementById("password").value;
+
+  if(!email || !pass){
+    alert("أدخل الإيميل وكلمة السر");
+    return;
+  }
+
+  const { error } = await supabase.auth.signUp({
+    email: email,
+    password: pass
+  });
+
+  if(error){
+    alert("خطأ: " + error.message);
+    return;
+  }
+
+  alert("تم إنشاء الحساب بنجاح!");
+  window.location.href = "login.html";
+}
+</script>
+
+</body>
+</html>
