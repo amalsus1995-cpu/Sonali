@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>الملف الشخصي</title>
+
+<style>
+body {
+  margin:0;
+  font-family:sans-serif;
+  direction:rtl;
+  text-align:center;
+  background:linear-gradient(135deg,#020617,#0f172a);
+  color:#e5e7eb;
+}
+.header {
+  padding:20px;
+  background:linear-gradient(90deg,#1d4ed8,#0ea5e9);
+  color:white;
+}
+.box {
+  margin:20px;
+  background:#020617;
+  border-radius:16px;
+  padding:20px;
+  border:1px solid rgba(148,163,184,.4);
+}
+.balance {
+  font-size:28px;
+  color:#facc15;
+}
+input {
+  padding:10px;
+  width:90%;
+  border-radius:10px;
+  border:1px solid #475569;
+  background:#0f172a;
+  color:white;
+}
+button {
+  width:90%;
+  margin-top:12px;
+  padding:12px;
+  border:none;
+  border-radius:999px;
+  font-size:16px;
+  font-weight:bold;
+}
+.save {
+  background:linear-gradient(90deg,#facc15,#eab308);
+  color:#111;
+}
+.logout {
+  background:#ef4444;
+  color:white;
+}
+.menu {
+  position:fixed;
+  bottom:0;
+  width:100%;
+  background:linear-gradient(90deg,#020617,#111827);
+  padding:10px 0;
+  display:flex;
+  justify-content:space-around;
+}
+.menu a {
+  text-decoration:none;
+  color:white;
+  font-size:13px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+  <h2>الملف الشخصي</h2>
+</div>
+
+<div class="box">
+  <h3>رصيدك</h3>
+  <div id="balance" class="balance">0$</div>
+</div>
+
+<div class="box">
+  <h3>عنوان محفظتك</h3>
+  <input id="wallet" type="text" placeholder="USDT TRC20">
+  <button class="save" onclick="saveWallet()">حفظ</button>
+</div>
+
+<div class="box">
+  <button class="logout" onclick="logout()">تسجيل الخروج</button>
+</div>
+
+<div class="menu">
+  <a href="profile.html">👤 الملف</a>
+  <a href="ads.html">🎥 الإعلانات</a>
+  <a href="wallet.html">💼 محفظتي</a>
+  <a href="about.html">ℹ️ من نحن</a>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+<script src="supabase.js"></script>
+
+<script>
+async function loadUser(){
+  const userId = localStorage.getItem("user_id");
+
+  const { data } = await supabase
+    .from("users")
+    .select("points, wallet_address")
+    .eq("id", userId)
+    .single();
+
+  if(data){
+    document.getElementById("balance").innerText = data.points + "$";
+    if(data.wallet_address){
+      document.getElementById("wallet").value = data.wallet_address;
+    }
+  }
+}
+loadUser();
+
+async function saveWallet(){
+  const userId = localStorage.getItem("user_id");
+  const wallet = document.getElementById("wallet").value;
+
+  if(wallet.length < 5){
+    alert("عنوان محفظة غير صالح!");
+    return;
+  }
+
+  await supabase.from("users")
+    .update({ wallet_address:wallet })
+    .eq("id", userId);
+
+  alert("تم حفظ المحفظة!");
+}
+
+async function logout(){
+  await supabase.auth.signOut();
+  localStorage.removeItem("user_id");
+  window.location.href = "login.html";
+}
+</script>
+
+</body>
+</html>
