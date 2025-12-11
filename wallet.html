@@ -1,60 +1,26 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>محفظتي</title>
-    <style>
-        body {
-            font-family: "Arial";
-            background: linear-gradient(to bottom, #001f4d, #000);
-            color: white;
-            text-align: center;
-            padding: 20px;
-        }
+<meta charset="UTF-8">
+<title>محفظتي</title>
 
-        .wallet-box {
-            background: rgba(255,255,255,0.1);
-            padding: 20px;
-            border-radius: 15px;
-            margin-top: 40px;
-        }
-
-        .copy-btn {
-            background: #ffb300;
-            color: black;
-            padding: 10px 20px;
-            border-radius: 10px;
-            margin-top: 10px;
-            cursor: pointer;
-            font-size: 18px;
-        }
-
-        .copy-btn:hover {
-            background: #ffc933;
-        }
-    </style>
+<style>
+body { background:#111; color:white; text-align:center; font-family:sans-serif; }
+.box { background:#222; padding:20px; border-radius:10px; margin:20px; }
+</style>
 </head>
+
 <body>
 
-<h1>محفظتي</h1>
-<p>قم بتحويل المبلغ إلى عنوان المحفظة التالي</p>
+<h2>محفظتي</h2>
 
-<div class="wallet-box">
-    <h3>عنوان المحفظة</h3>
-
-    <!-- ضع عنوان محفظتك هنا -->
-    <p id="wallet">TPNoGerv1EMBSdrs9Yca93eCQUVsoNiRvq</p>
-
-    <button class="copy-btn" onclick="copyWallet()">نسخ العنوان</button>
+<div class="box">
+<p>رصيدك: <span id="balance">0</span>$</p>
 </div>
 
+<script src="supabase.js"></script>
 <script>
-function copyWallet() {
-    const text = document.getElementById("wallet").innerText;
-    navigator.clipboard.writeText(text);
-    alert("تم نسخ عنوان المحفظة");
-}
+// لاحقاً نربطها مع جدول السحب والشحن
 </script>
 
 </body>
